@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import TabChildAdd from './TabChildAdd';
 import TabChildChangeName from './TabChildChangeName';
-import EnhancedTable from './TavChildTest';
+import TabChildMarketingList from './TabChildMarketingList';
 
 const TabChild = () => {
   // const [add, setAdd] = useState([]);
@@ -13,7 +13,7 @@ const TabChild = () => {
     <Box>
       <TabChildAdd />
       <TabChildChangeName />
-      <EnhancedTable />
+      <TabChildMarketingList />
     </Box>
   );
 };
