@@ -27,7 +27,7 @@ interface Data {
 }
 
 const rows = [
-  { id: '1', name: 'Cupcake', count: 305 },
+  { id: '1', name: 'Cupcake', count: 35 },
   { id: '2', name: 'Donut', count: 452 },
   { id: '3', name: 'Eclair', count: 262 },
   { id: '4', name: 'Frozen', count: 159 },
