@@ -1,5 +1,5 @@
-import TabLists from './Component/TabList';
-import Header from './Header/Header';
+import Header from './component/Header/Header';
+import TabLists from './component/Tab/TabList';
 
 function App() {
   return (

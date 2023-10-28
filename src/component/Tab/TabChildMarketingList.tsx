@@ -26,13 +26,7 @@ interface Data {
   name: string;
 }
 
-const rows = [
-  { id: '1', name: 'Cupcake', count: 35 },
-  { id: '2', name: 'Donut', count: 452 },
-  { id: '3', name: 'Eclair', count: 262 },
-  { id: '4', name: 'Frozen', count: 159 },
-  { id: '5', name: 'Gingerbread', count: 356 },
-];
+const rows = [{ id: '1', name: '', count: 0 }];
 
 interface HeadCell {
   disablePadding: boolean;
@@ -95,8 +89,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface EnhancedTableToolbarProps {
   numSelected: number;
-  onClickAddRow: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onClickDeleteAll: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onClickAddRow: () => void;
+  onClickDeleteAll: () => void;
 }
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
@@ -135,7 +129,13 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     </Toolbar>
   );
 }
-export default function TabChildMarketingList() {
+
+interface TabChildMarketingList {
+  handleDataGrid: () => void;
+}
+
+export default function TabChildMarketingList(props: TabChildMarketingList) {
+  const { handleDataGrid } = props;
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [rowsList, setRowsList] = useState(rows);
 
@@ -158,9 +158,14 @@ export default function TabChildMarketingList() {
   const handleDeleteRow = (id: React.ReactNode) => {
     setRowsList(rowsList.filter((row) => row.id !== id));
   };
+
   const handleDeleteAll = () => {
     setRowsList([]);
     setSelected([]);
+  };
+
+  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target);
   };
 
   return (
@@ -203,10 +208,10 @@ export default function TabChildMarketingList() {
                       />
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="none">
-                      <TextField value={row.name} variant="standard" fullWidth />
+                      <TextField variant="standard" fullWidth onChange={handleChangeName} type="string" />
                     </TableCell>
                     <TableCell align="center">
-                      <TextField value={row.count} variant="standard" fullWidth />
+                      <TextField variant="standard" fullWidth type="number" />
                     </TableCell>
                     <TableCell align="center">
                       <IconButton onClick={() => handleDeleteRow(row.id)}>
