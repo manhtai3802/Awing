@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Delete } from '@mui/icons-material';
 import {
   Box,
@@ -26,8 +27,6 @@ interface Data {
   quantity: number;
   name: string;
 }
-
-const rows = [{ id: '1', name: '', quantity: 0 }];
 
 interface HeadCell {
   disablePadding: boolean;
@@ -131,19 +130,19 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   );
 }
 
-interface PropsTYpeTabChildMarketingList {
+interface PropTypes {
   indexBox: number;
 }
 
-export default function TabChildMarketingList(props: PropsTYpeTabChildMarketingList) {
-  const { values: formikValues } = useFormikContext();
+export default function TabChildMarketingList(props: PropTypes) {
+  const { values: formikValues } = useFormikContext<any>();
   const { indexBox } = props;
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const listGridData = formikValues.subCampaigns[indexBox].ads;
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = listGridData.map((n) => n.id);
+      const newSelected = listGridData.map((n: any) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -187,7 +186,7 @@ export default function TabChildMarketingList(props: PropsTYpeTabChildMarketingL
                   rowCount={listGridData.length}
                 />
                 <TableBody>
-                  {listGridData.map((row, index) => {
+                  {listGridData.map((row: any, index: any) => {
                     const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
 

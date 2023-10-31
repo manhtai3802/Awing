@@ -1,26 +1,27 @@
 import MuiTextField from '@mui/material/TextField';
-import { Field } from 'formik';
+import { Field, FieldProps } from 'formik';
 
 interface TextFieldPropsType {
   name: string;
-  type: string;
+  label?: string;
+  type?: string;
+  value?: string;
 }
 
 export default function TextField(props: TextFieldPropsType) {
-  const { name, type } = props;
+  const { name } = props;
 
   return (
     <Field name={name}>
-      {({ field, form, meta }) => (
+      {({ field, meta }: FieldProps) => (
         <div>
           <MuiTextField
             fullWidth
             {...field}
-            {...props}
             variant="standard"
-            error={meta.touched && meta.error}
+            error={!!meta.touched && !!meta.error}
             onBlur={() => {}}
-            type={type ? type : 'string'}
+            {...props}
           />
           {meta.touched && meta.error && <div style={{ color: 'red' }}>{meta.error}</div>}
         </div>

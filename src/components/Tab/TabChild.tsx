@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Add } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
 import { FieldArray, useFormikContext } from 'formik';
@@ -7,7 +8,7 @@ import TabChildChangeName from './TabChildChangeName';
 import TabChildMarketingList from './TabChildMarketingList';
 
 const TabChild = () => {
-  const { values: formikValues } = useFormikContext();
+  const { values: formikValues } = useFormikContext<any>();
   const [indexBox, setIndexBox] = useState(0);
   const [countBox, setCount] = useState(1);
 
@@ -26,7 +27,7 @@ const TabChild = () => {
     setCount(countBox + 1);
   };
 
-  const handleClickBox = ({ subCampaignCount }: number) => {
+  const handleClickBox = ({ subCampaignCount }: any) => {
     setIndexBox(subCampaignCount);
   };
 

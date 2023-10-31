@@ -1,19 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, Card, CardActionArea, CardContent } from '@mui/material';
 import { useFormikContext } from 'formik';
 
-interface propTypes {
-  subCampaignCount: number;
-  onClickBox: () => void;
-  subCampaign: React.ReactNode;
+interface PropTypes {
+  subCampaignCount: any;
+  onClickBox: ({ subCampaignCount }: { subCampaignCount: any }) => void;
 }
 
-const TabChildAdd = (props: propTypes) => {
+const TabChildAdd = (props: PropTypes) => {
   const { subCampaignCount, onClickBox } = props;
-  const { values: formikValues } = useFormikContext();
+  const { values: formikValues } = useFormikContext<any>();
   const currentBox = formikValues.subCampaigns[subCampaignCount];
 
-  const totalDataGrid = currentBox.ads.map((val) => val.quantity);
-  const totalQuantity = totalDataGrid.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  const totalDataGrid = currentBox.ads.map((val: any) => val.quantity);
+  const totalQuantity = totalDataGrid.reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
 
   const titleSubCampaigns = currentBox.name;
 

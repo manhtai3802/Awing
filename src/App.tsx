@@ -57,7 +57,6 @@ function App() {
           }),
         );
 
-        console.log('>>>>>>>', values);
         setSubmitting(false);
       }}
     >
