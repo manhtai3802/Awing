@@ -1,34 +1,35 @@
 import { Add } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
 import { FieldArray, useFormikContext } from 'formik';
+import { useState } from 'react';
 import TabChildAdd from './TabChildAdd';
 import TabChildChangeName from './TabChildChangeName';
-import TextField from '../TextField/TextField';
-import { useState } from 'react';
-
-const subCampaignsDefVal = {
-  name: '',
-  status: '',
-  ads: [
-    {
-      name: '',
-      quantity: 0,
-    },
-  ],
-};
+import TabChildMarketingList from './TabChildMarketingList';
 
 const TabChild = () => {
   const { values: formikValues } = useFormikContext();
   const [indexBox, setIndexBox] = useState(0);
-  const formik = useFormikContext();
+  const [countBox, setCount] = useState(1);
 
   const handleAddData = (helper: any) => () => {
-    helper.push(subCampaignsDefVal);
+    helper.push({
+      name: `Chiến dịch con ${countBox + 1}`,
+      status: true,
+      ads: [
+        {
+          id: 'abc',
+          name: 'Quảng cáo 1',
+          quantity: 0,
+        },
+      ],
+    });
+    setCount(countBox + 1);
   };
 
   const handleClickBox = ({ subCampaignCount }: number) => {
     setIndexBox(subCampaignCount);
   };
+
   return (
     <FieldArray
       name="subCampaigns"
@@ -38,20 +39,18 @@ const TabChild = () => {
             <IconButton sx={{ height: 40, width: 40 }} onClick={handleAddData(arrayHelpers)}>
               <Add />
             </IconButton>
-            <Box style={{ display: 'flex' }}>
+            <Box style={{ display: 'flex', width: '1400px', overflow: 'auto' }}>
               {formikValues.subCampaigns.map((subCampaign: any, index: number) => (
                 <TabChildAdd key={index} subCampaignCount={index} onClickBox={handleClickBox} />
               ))}
             </Box>
           </Box>
 
+          <Box style={{ margin: '20px' }}>
+            <TabChildChangeName indexBox={indexBox} />
+          </Box>
           <Box>
-            <Box style={{ display: 'flex' }}>
-              <TextField
-                name={formikValues.subCampaigns[indexBox].name}
-                id={formikValues.subCampaigns[indexBox].name}
-              />
-            </Box>
+            <TabChildMarketingList indexBox={indexBox} />
           </Box>
         </Box>
       )}

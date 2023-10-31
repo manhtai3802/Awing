@@ -1,32 +1,33 @@
 import { Delete } from '@mui/icons-material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Button } from '@mui/material';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TextField from '@mui/material/TextField';
-import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
+import {
+  Box,
+  Button,
+  Checkbox,
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { alpha } from '@mui/material/styles';
+import { FieldArray, useFormikContext } from 'formik';
 import * as React from 'react';
-import { useState } from 'react';
 import uniqid from 'uniqid';
+import TextField from '../TextField/TextField';
 
 interface Data {
   id: string;
-  count: number;
+  quantity: number;
   name: string;
 }
 
-const rows = [{ id: '1', name: '', count: 0 }];
+const rows = [{ id: '1', name: '', quantity: 0 }];
 
 interface HeadCell {
   disablePadding: boolean;
@@ -43,10 +44,10 @@ const headCells: readonly HeadCell[] = [
     label: 'Tên quảng cáo *',
   },
   {
-    id: 'count',
+    id: 'quantity',
     numeric: false,
     disablePadding: true,
-    label: 'Số lượng',
+    label: 'Số lượng *',
   },
 ];
 
@@ -118,7 +119,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton onClick={onClickDeleteAll}>
-            <DeleteIcon />
+            <Delete />
           </IconButton>
         </Tooltip>
       ) : (
@@ -130,96 +131,105 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   );
 }
 
-export default function TabChildMarketingList() {
+interface PropsTYpeTabChildMarketingList {
+  indexBox: number;
+}
+
+export default function TabChildMarketingList(props: PropsTYpeTabChildMarketingList) {
+  const { values: formikValues } = useFormikContext();
+  const { indexBox } = props;
   const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [rowsList, setRowsList] = useState(rows);
+  const listGridData = formikValues.subCampaigns[indexBox].ads;
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = rowsList.map((n) => n.id);
+      const newSelected = listGridData.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleAddRow = () => {
-    const index = uniqid();
-    setRowsList([...rowsList, { id: index, name: '', count: 0 }]);
+  const handleAddRow = (helper: any) => () => {
+    const id = uniqid();
+    const indexGrid = listGridData.length + 1;
+
+    helper.push({ id: id, name: `Quảng cáo ${indexGrid}`, quantity: 0 });
   };
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
-  const handleDeleteRow = (id: React.ReactNode) => {
-    setRowsList(rowsList.filter((row) => row.id !== id));
+  const handleDeleteRow = (helper: any, id: string) => {
+    helper.remove(id);
   };
 
   const handleDeleteAll = () => {
-    setRowsList([]);
+    listGridData.length = 0;
     setSelected([]);
   };
 
-  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target);
-  };
-
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar
-          numSelected={selected.length}
-          onClickAddRow={handleAddRow}
-          onClickDeleteAll={handleDeleteAll}
-        />
-        <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-            <EnhancedTableHead
+    <FieldArray
+      name={`subCampaigns[${indexBox}].ads`}
+      render={(arrayHelpers) => (
+        <Box sx={{ width: '100%' }} key={indexBox}>
+          <Paper sx={{ width: '100%', mb: 2 }}>
+            <EnhancedTableToolbar
               numSelected={selected.length}
-              onSelectAllClick={handleSelectAllClick}
-              rowCount={rowsList.length}
+              onClickAddRow={handleAddRow(arrayHelpers)}
+              onClickDeleteAll={handleDeleteAll}
             />
-            <TableBody>
-              {rowsList.map((row, index) => {
-                const isItemSelected = isSelected(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
+            <TableContainer>
+              <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  onSelectAllClick={handleSelectAllClick}
+                  rowCount={listGridData.length}
+                />
+                <TableBody>
+                  {listGridData.map((row, index) => {
+                    const isItemSelected = isSelected(row.id);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell component="th" id={labelId} scope="row" padding="none">
-                      <TextField variant="standard" fullWidth onChange={handleChangeName} type="string" />
-                    </TableCell>
-                    <TableCell align="center">
-                      <TextField variant="standard" fullWidth type="number" />
-                    </TableCell>
-                    <TableCell align="center">
-                      <IconButton onClick={() => handleDeleteRow(row.id)}>
-                        <Delete />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-    </Box>
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.id}
+                        selected={isItemSelected}
+                        sx={{ cursor: 'pointer' }}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              'aria-labelledby': labelId,
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell component="th" id={labelId} scope="row" padding="none">
+                          <TextField name={`subCampaigns[${indexBox}].ads[${index}].name`} />
+                        </TableCell>
+                        <TableCell align="center">
+                          <TextField name={`subCampaigns[${indexBox}].ads[${index}].quantity`} type="number" />
+                        </TableCell>
+                        <TableCell align="center">
+                          <IconButton onClick={() => handleDeleteRow(arrayHelpers, row.id)}>
+                            <Delete />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        </Box>
+      )}
+    />
   );
 }

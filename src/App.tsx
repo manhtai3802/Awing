@@ -8,6 +8,21 @@ const schema = yup.object().shape({
     name: yup.string().required('Dữ liệu không hợp lệ'),
     describe: yup.string(),
   }),
+  subCampaigns: yup.array().of(
+    yup.object().shape({
+      name: yup.string().required('Dữ liệu không hợp lệ'),
+      status: yup.boolean(),
+      ads: yup
+        .array()
+        .min(1, 'Phải có tối thiểu 1 quảng cáo')
+        .of(
+          yup.object().shape({
+            name: yup.string().required('Dữ liệu không hợp lệ'),
+            quantity: yup.number().min(1, 'Dữ liệu không hợp lệ').required('Dữ liệu không hợp lệ'),
+          }),
+        ),
+    }),
+  ),
 });
 
 function App() {
@@ -20,11 +35,12 @@ function App() {
         },
         subCampaigns: [
           {
-            name: 'Tên chiến dịch 1',
+            name: 'Chiến dịch con 1',
             status: true,
             ads: [
               {
-                name: '',
+                id: 'abc',
+                name: 'Quảng cáo 1',
                 quantity: 0,
               },
             ],
@@ -33,20 +49,14 @@ function App() {
       }}
       validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {
-        // const objValues = {
-        //   campaign: {
-        //     information: {
-        //       name: values.name,
-        //       describe: values.describe,
-        //     },
-        //     subCampaigns: [],
-        //   },
-        // };
+        alert(
+          JSON.stringify({
+            campaign: {
+              ...values,
+            },
+          }),
+        );
 
-        // setTimeout(() => {
-        //   alert(JSON.stringify(objValues, null, 2));
-        //   setSubmitting(false);
-        // }, 400);
         console.log('>>>>>>>', values);
         setSubmitting(false);
       }}
