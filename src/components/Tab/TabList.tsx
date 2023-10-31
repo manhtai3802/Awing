@@ -6,6 +6,7 @@ import TabInformation from './TabInformation';
 
 const TabLists = () => {
   const [value, setValue] = useState('1');
+  // tabCount
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);

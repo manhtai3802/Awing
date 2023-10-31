@@ -130,12 +130,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   );
 }
 
-interface TabChildMarketingList {
-  handleDataGrid: () => void;
-}
-
-export default function TabChildMarketingList(props: TabChildMarketingList) {
-  const { handleDataGrid } = props;
+export default function TabChildMarketingList() {
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [rowsList, setRowsList] = useState(rows);
 
