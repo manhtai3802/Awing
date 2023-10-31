@@ -50,11 +50,7 @@ const TabChild = () => {
               <TextField
                 name={formikValues.subCampaigns[indexBox].name}
                 id={formikValues.subCampaigns[indexBox].name}
-                formik={formik}
               />
-
-              {/* <Field name={subCampaign?.name} components={TextField} variant="standard" /> */}
-              {/* <FormControlLabel control={<Checkbox name={subCampaign?.status} />} label="Đang hoạt dộng" xs={6} md={4} /> */}
             </Box>
           </Box>
         </Box>
